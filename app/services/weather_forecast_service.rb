@@ -45,8 +45,8 @@ class WeatherForecastService < BaseService
   def fetch_forecast_from_api
     response = conn.get('/forecast', { 'access_key': ENV['WEATHER_STACK_API_KEY'], 'query': full_address })
 
-    # Parse the response body safely, symbolizing keys for easier access
-    data = JSON.parse(response.body).deep_symbolize_keys
+    # Symbolizing keys for easier access
+    data = response.body.deep_symbolize_keys
 
     # Dig into the forecast hash for today's data (first day in response)
     forecast_data = data.dig(:forecast)&.values&.first || {}

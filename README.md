@@ -104,3 +104,11 @@ This project uses [RSpec](https://rspec.info/) for unit, service, and request te
     {
       "error": "Unable to connect to weather service"
     }
+
+## Demo
+- **Validation fails**
+  - <img src="https://res.cloudinary.com/dz9oneies/image/upload/v1744658944/s1_eiiilg.png" alt="Forecast UI" width="200"/>
+- **Fresh results from API**
+  - <img src="https://res.cloudinary.com/dz9oneies/image/upload/v1744658944/s2_ftxzfi.png" alt="Forecast UI" width="200"/>
+- **Cached results**
+  - <img src="https://res.cloudinary.com/dz9oneies/image/upload/v1744658944/s3_b7dxkk.png" alt="Forecast UI" width="200"/>
