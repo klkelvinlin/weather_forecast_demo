@@ -6,3 +6,5 @@ tmp/*
 /node_modules
 /public/packs
 .byebug_history
+.idea/
+*.iml
