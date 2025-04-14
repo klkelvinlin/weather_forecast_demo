@@ -1,21 +1,21 @@
 # frozen_string_literal: true
-require 'ostruct'
-class Address < OpenStruct
+
+class Address
+  include ActiveModel::Model
   attr_accessor :street, :city, :state, :zipcode
 
-  def initialize(params)
-    @street = params[:street]
-    @city = params[:city]
-    @state = params[:state]
-    @zipcode = params[:zipcode]
+  validates :street, :city, :state, :zipcode, presence: true
+  validate :zipcode_format
+
+  def full_address
+    "#{street}, #{city}, #{state} #{zipcode}"
   end
 
-  def valid_zipcode?
-    @zipcode.match?(/\A\d{5}(-\d{4})?\z/)
-  end
+  private
 
-  def valid?
-    return false if @street.blank? || @city.blank? || @state.blank? || @zipcode.blank?
-    valid_zipcode?
+  def zipcode_format
+    unless zipcode.to_s.match?(/\A\d{5}(-\d{4})?\z/)
+      errors.add(:zipcode, "is invalid")
+    end
   end
 end

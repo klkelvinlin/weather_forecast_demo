@@ -6,39 +6,42 @@ class WeatherForecastService < BaseService
     @address = address
   end
 
-  def cached_forecast
-    key = cache_key(@address.zipcode)
-    ap 'cached_forecast...'
-    ap key
-    Rails.cache.read(key) || {}
-  end
-
-  def api_forecast
-    data = conn.get('/forecast', { 'access_key': ENV['WEATHER_STACK_API_KEY'], 'query': full_address }).to_hash.deep_symbolize_keys.dig(:body)
-    current_temp_hash = data[:current]
-    forecast_temp_hash = data[:forecast].values.first
-    @raw_response ||= { current_temp: current_temp_hash[:temperature],
-                        avg_temp: forecast_temp_hash[:avgtemp],
-                        min_temp: forecast_temp_hash[:mintemp],
-                        max_temp: forecast_temp_hash[:maxtemp] }
-  end
-
   def call
-    ap 'call...'
-    ap cached_forecast
-    ap cached_forecast.present?
-    if cached_forecast.present?
-      cached_forecast.merge({ using_cache: true })
-    else
-      Rails.cache.write(cache_key(@address.zipcode), api_forecast, expires_in: 30.minutes)
-      api_forecast.merge({ using_cache: false })
-    end
+    cached = read_cached_forecast
+    return cached.merge(using_cache: true) if cached.present?
+
+    forecast = fetch_forecast_from_api
+    Rails.cache.write(cache_key, forecast, expires_in: 30.minutes)
+    forecast.merge(using_cache: false)
   end
 
   private
 
-  def cache_key(zipcode)
-    "irecycle:forecast:#{zipcode}"
+  def cache_key
+    raise ArgumentError, 'Missing zipcode' if @address.zipcode.blank?
+    "irecycle:forecast:#{@address.zipcode}"
+  end
+
+  def read_cached_forecast
+    Rails.cache.read(cache_key) || {}
+  end
+
+  def fetch_forecast_from_api
+    response = conn.get('/forecast', { 'access_key': ENV['WEATHER_STACK_API_KEY'], 'query': full_address })
+    data = JSON.parse(response.body).deep_symbolize_keys
+    forecast_data = data.dig(:forecast)&.values&.first || {}
+    {
+      current_temp: data.dig(:current, :temperature),
+      avg_temp: forecast_data[:avgtemp],
+      min_temp: forecast_data[:mintemp],
+      max_temp: forecast_data[:maxtemp]
+    }
+  rescue Faraday::ConnectionFailed => e
+    Rails.logger.error("Weather API connection failed: #{e.message}")
+    raise ForecastApiError, 'Unable to connect to weather service'
+  rescue Faraday::TimeoutError => e
+    Rails.logger.error("Weather API timed out: #{e.message}")
+    raise ForecastApiError, 'Weather service timeout'
   end
 
   def full_address
