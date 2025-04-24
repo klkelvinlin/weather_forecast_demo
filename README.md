@@ -26,8 +26,8 @@ To get the project up and running locally, follow these steps:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/irecycle.git
-   cd irecycle
+   git clone https://github.com/your-username/weather_forecast_demo.git
+   cd weather_forecast_demo
 2. **Install Ruby and Rails dependencies**
    ```bash
    bundle install
@@ -72,12 +72,12 @@ To get the project up and running locally, follow these steps:
     │     └── forecasts_spec.rb            # Controller request tests
 ```
 - **Quick links**
-  - [Forecasts controller](https://github.com/klkelvinlin/iRecycle/blob/main/app/controllers/forecasts_controller.rb) 
-  - [WeatherForecast service](https://github.com/klkelvinlin/iRecycle/blob/main/app/services/weather_forecast_service.rb)
-  - [Address model](https://github.com/klkelvinlin/iRecycle/blob/main/app/models/address.rb)
-  - [JQuery handler](https://github.com/klkelvinlin/iRecycle/blob/main/app/assets/javascripts/weather_forecast.js)
-  - [Web view](https://github.com/klkelvinlin/iRecycle/blob/main/app/views/forecasts/index.html.erb)
-  - [Tests](https://github.com/klkelvinlin/iRecycle/tree/main/spec)
+  - [Forecasts controller](https://github.com/klkelvinlin/weather_forecast_demo/blob/main/app/controllers/forecasts_controller.rb) 
+  - [WeatherForecast service](https://github.com/klkelvinlin/weather_forecast_demo/blob/main/app/services/weather_forecast_service.rb)
+  - [Address model](https://github.com/klkelvinlin/weather_forecast_demo/blob/main/app/models/address.rb)
+  - [JQuery handler](https://github.com/klkelvinlin/weather_forecast_demo/blob/main/app/assets/javascripts/weather_forecast.js)
+  - [Web view](https://github.com/klkelvinlin/weather_forecast_demo/blob/main/app/views/forecasts/index.html.erb)
+  - [Tests](https://github.com/klkelvinlin/weather_forecast_demo/tree/main/spec)
 - **Additional key files**
   - `.env ` – Environment variables (e.g. API keys)
   - `spec/ ` – RSpec tests for models, services, requests
